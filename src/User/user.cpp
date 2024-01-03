@@ -5,12 +5,13 @@
 #include <string>
 #include <sstream>
 #include <filesystem>
+#include "../Flow/flow.h"
 using namespace std;
 
 void User::greeting()
 {
     int optiune = 1;
-    
+    bool logged = 0;
     while(optiune != 0)
     {
         cout<<"\nHello\nselect 1 for authentification or 2 for login\n";
@@ -22,12 +23,15 @@ void User::greeting()
         }
         else if(optiune == 2)
         {
-            User::login();
+            User::login(logged);
+            if(logged == 1)
             optiune = 0;
         }
         else 
         cout<<"Optiune invalida. Incearca din nou. Apasa 0 daca vrei sa iesi\n";
     }
+    if(logged == 1)
+        User::startFlows();
 }
 void User::authentif()
 {
@@ -74,7 +78,7 @@ void User::authentif()
 }
 }
 
-void User::login()
+void User::login( bool &logged)
 {
     bool ok = 1;
     string username;
@@ -99,6 +103,7 @@ void User::login()
                 cout<<"\n----Succesful login----\n";
                 this->name = username;
                 ok = 0;
+                logged = 1;
                 break;
             }
         }
@@ -113,4 +118,84 @@ void User::login()
        }
 
 }
+}
+
+void User::startFlows()
+{
+    int optiune = 1;
+    while(optiune!=0)
+    {
+        cout<<"\nApasa 1 daca vrei sa creezi un now flow, 2 daca vrei sa accesezi unul nou.\n";
+        cin>>optiune;
+        if(optiune == 1)
+        User::createNewFlow();
+        // else if(optiune == 2)
+        // {
+        //     string flow;
+        //     cout<<"\nCe flow vrei sa accesezi?\n";
+        //     cin>>flow;
+        //     User::accessExistingFlows(name,flow);
+        // }
+        else
+        cout<<"\nOptiune invalida. Try again\n";
+    }
+}
+void User::createNewFlow()
+{
+    
+    cout<<"\n----Welcome to Flow creation----\n";
+    cout<<"The steps are:\n";
+    vector<string> steps ={ "1. Add a Title and a new Subtitle.\n", 
+    "2. Add a title of the flow and a description of the flow.\n",
+    "3. Add a step of your flow and a description.\n",
+    };
+    for( int i = 0 ; i < steps.size(); i++ )
+    cout<<steps[i];
+    TextRelatedStepsBuilder * textsteps = new TextRelatedStepsBuilder();
+    int optiune = 1;
+    while(optiune != 0)
+    {    
+        cout<<"\nPentru a alege un pas, apasa indexul acestuia. Pentru a termina flowul apasa 0\n";
+        cin>>optiune;
+        
+        string title;
+        string subtitle;
+        string text;
+        string description;
+        string text_input;
+        
+        switch (optiune)
+        {
+            case 0:
+                break;
+            case 1:
+                cout<<"Add a title: \n";
+                cin>>title;
+                cout<<"Add a subtitle :\n";
+                cin>>subtitle;
+                textsteps->addTitle(title,subtitle);
+                break;
+            case 2:
+                cout<<"Add a title: \n";
+                cin>>title;
+                cout<<"Add text\n";
+                cin>>text;
+                textsteps->addText(title,text);
+                break;
+            case 3:
+                cout<<"Add a description: \n";
+                cin>>description;
+                cout<<"Add text input :\n";
+                cin>>text_input;
+                textsteps->addTitle(title,subtitle);
+                break;
+            default:
+                cout<<"Optiune Invalida. Incearca din nou";
+                break;
+        }
+    }
+    TextRelatedSteps* text = textsteps->getData();
+    text->printData();
+    delete textsteps;
+
 }

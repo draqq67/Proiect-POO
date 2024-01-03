@@ -14,8 +14,12 @@ class User {
 
     void greeting();
     void authentif();
-    void login();
-    void startBuildingflows();
+    void login(bool &logged);
+    void startFlows();
+    // void buildFlow();
+    void createNewFlow();
+    void accessExistingFlows(std::string username, std::string flowname );
+    void deleteFlows();
 
 };
 

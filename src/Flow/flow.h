@@ -3,67 +3,94 @@
 #define FLOW_H
 #include <iostream>
 #include <string>
+#include <vector>
 
-class FlowSteps{
-
-    public:
-    std::string text;
-    std::string title;
-    std::string subtitle;
-    std::string description;
-    std::string copy;
-    virtual void listFlow()=0;
-};
+using namespace std;
+//interface for StepsBuilder
 class FlowBuilder{
     
     public:
     virtual ~FlowBuilder() {}; 
-    virtual void reset() = 0;
 };
-class TextRelatedSteps : public FlowSteps{
 
+//interface for the Steps
+class FlowSteps
+{
+    public:
+    virtual void printData() =0;
+    // virtual void setToFile() =0;
+
+};
+
+//Text Related Steps and Builder
+class TextRelatedSteps : public FlowSteps {
+    
+    public:
+        vector<string> title;
+        vector<string> subtitle;
+        vector<string> flow_title;
+        vector<string> text;
+        vector<string> description;
+        vector<string> text_input;
+        
+        void printData() override;
+        // void setToFile() override;
 };
 class TextRelatedStepsBuilder : public FlowBuilder{
     private:
-    TextRelatedSteps* text;
+        TextRelatedSteps* text;
     public:
     ~TextRelatedStepsBuilder() override;
-    void reset() override;
+    TextRelatedSteps* getData();
+    TextRelatedStepsBuilder();
     void addTitle(std::string title, std::string subtitle);
-    void addText(std::string text, std::string copy);
+    void addText(std::string title, std::string copy);
     void addTextInput(std::string description, std::string input );
 };
-class NumberRelatedSteps : public FlowSteps{
 
+//Number Related Steps and Builder
+class NumberRelatedSteps{
+    
+    // public:
+    //     void printData() override;
+    //     void setToFile() override;
 };
 class NumberRelatedStepsBuilder : public FlowBuilder{
 
     private:
-    NumberRelatedSteps* step;
+    NumberRelatedSteps* number;
     public :
     ~NumberRelatedStepsBuilder() override;
-    void reset() override;
+    NumberRelatedSteps* getData();
+    NumberRelatedStepsBuilder();
     void numberInputStep(std::string description, float number );
     void calculusStep(int steps, std::string operation );
     void showCalculusStep();
 
 };
 
-class DisplaySteps : public FlowSteps{
-
+//Display Steps and Builder
+class DisplaySteps{
+    // void printData() override;
+    // void setToFile() override;
 };
 class DisplayStepsBuilder : public FlowBuilder{ 
     private:
     DisplaySteps* display;
     public:
-    ~DisplayStepsBuilder();
-    void reset() override;
+    ~DisplayStepsBuilder() override;
+    DisplaySteps* getData();
+    DisplayStepsBuilder();
     void chooseAndDisplayStep();
     void txtStep();
     void csvStep();
 };
-class OutputSteps : public FlowSteps{
-
+//Output Steps And Builder
+class OutputSteps{
+    
+    // public:
+    //     void printData() override;
+    //     void setToFile() override;
 };
 class OutputStepsBuilder : public FlowBuilder
 {
@@ -71,23 +98,14 @@ class OutputStepsBuilder : public FlowBuilder
     OutputSteps* output;
     public :
     ~OutputStepsBuilder();
-    void reset() override;
+    OutputSteps* getData();
+    OutputStepsBuilder();
     void generateTextFileStep();
     void provideDataStep();
     void generatingTimeStamp();
     void addInsights();
     void refreshInsights();
 
-};
-
-// the class where i get all the steps to build the flows
-class Flow{
-
-    public:
-    void buildFlow();
-    void createNewFlow();
-    void accessExistingFlows(std::string username, std::string flowname );
-    void deleteFlows();
 };
 
 #endif
