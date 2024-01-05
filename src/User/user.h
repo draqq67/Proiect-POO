@@ -20,6 +20,7 @@ class User {
     void createNewFlow();
     void accessExistingFlows(std::string username, std::string flowname );
     void deleteFlows();
+    string getCurrentTimestamp();
 
 };
 

@@ -3,6 +3,7 @@
 #define FLOW_H
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <vector>
 
 using namespace std;
@@ -18,7 +19,7 @@ class FlowSteps
 {
     public:
     virtual void printData() =0;
-    // virtual void setToFile() =0;
+    virtual void setToFile( string file) =0;
 
 };
 
@@ -34,7 +35,7 @@ class TextRelatedSteps : public FlowSteps {
         vector<string> text_input;
         
         void printData() override;
-        // void setToFile() override;
+        void setToFile(string file) override;
 };
 class TextRelatedStepsBuilder : public FlowBuilder{
     private:
@@ -49,11 +50,15 @@ class TextRelatedStepsBuilder : public FlowBuilder{
 };
 
 //Number Related Steps and Builder
-class NumberRelatedSteps{
+class NumberRelatedSteps: public FlowSteps {
     
-    // public:
-    //     void printData() override;
-    //     void setToFile() override;
+    public:
+    vector<string> descriptions;
+    vector<float> numbers;
+    vector<string> calculus_description;
+    vector<float> calculus;
+        void printData() override;
+        void setToFile(string file) override;
 };
 class NumberRelatedStepsBuilder : public FlowBuilder{
 
@@ -64,15 +69,21 @@ class NumberRelatedStepsBuilder : public FlowBuilder{
     NumberRelatedSteps* getData();
     NumberRelatedStepsBuilder();
     void numberInputStep(std::string description, float number );
-    void calculusStep(int steps, std::string operation );
-    void showCalculusStep();
+    void calculusStep(std::vector<int> steps_index, std::vector<string> operators, std::string calculusdescription );
+    // void showCalculusStep();
+    float operations(float a, float b, string operation);
 
 };
 
 //Display Steps and Builder
-class DisplaySteps{
-    // void printData() override;
-    // void setToFile() override;
+class DisplaySteps : public FlowSteps {
+    public:
+    vector<string> txtFileName;
+    vector<string> csvFileName;
+    vector<string> descriptionTxt;
+    vector<string> descriptionCsv;
+    void printData() override;
+    void setToFile( string file) override;
 };
 class DisplayStepsBuilder : public FlowBuilder{ 
     private:
@@ -81,31 +92,30 @@ class DisplayStepsBuilder : public FlowBuilder{
     ~DisplayStepsBuilder() override;
     DisplaySteps* getData();
     DisplayStepsBuilder();
-    void chooseAndDisplayStep();
-    void txtStep();
-    void csvStep();
+    void chooseAndDisplayStep(string index,TextRelatedStepsBuilder * textsteps, NumberRelatedStepsBuilder* numbersteps);
+    void csvAndTxtStep(string description, string name,string path, bool ok);
 };
 //Output Steps And Builder
-class OutputSteps{
+// class OutputSteps {
     
-    // public:
-    //     void printData() override;
-    //     void setToFile() override;
-};
-class OutputStepsBuilder : public FlowBuilder
-{
-    private:
-    OutputSteps* output;
-    public :
-    ~OutputStepsBuilder();
-    OutputSteps* getData();
-    OutputStepsBuilder();
-    void generateTextFileStep();
-    void provideDataStep();
-    void generatingTimeStamp();
-    void addInsights();
-    void refreshInsights();
+//     // public:
+//     //     void printData() override;
+//         // void setToFile() override;
+// };
+// class OutputStepsBuilder : public FlowBuilder
+// {
+//     private:
+//     OutputSteps* output;
+//     public :
+//     ~OutputStepsBuilder();
+//     OutputSteps* getData();
+//     OutputStepsBuilder();
+//     void generateTextFileStep();
+//     void provideDataStep();
+//     void generatingTimeStamp();
+//     // void addInsights();
+//     // void refreshInsights();
 
-};
+// };
 
 #endif

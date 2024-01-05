@@ -1,0 +1,30 @@
+---Titles---
+
+Activitate 1
+6/11/2022
+
+---Text---
+
+Lista de Cumparaturi
+Astazi mergem la cora sa facem groceries
+
+---Flow---
+
+Intru in cora : done
+Merg la raionul de prajituri : done
+Merg la raionul de sucuri: done
+Merg la raionul de legume : done
+Merg la raionul de igiena : done
+Ies din cora : done
+
+---Number Steps---
+
+Prajituri : 10
+Sucuri : 5
+Legume : 10
+Igiena : 15
+
+---Calculus Steps---
+
+step 0 + step 1 + step 2 + step 3 : 
+
