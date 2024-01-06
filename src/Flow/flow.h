@@ -95,27 +95,6 @@ class DisplayStepsBuilder : public FlowBuilder{
     void chooseAndDisplayStep(string index,TextRelatedStepsBuilder * textsteps, NumberRelatedStepsBuilder* numbersteps);
     void csvAndTxtStep(string description, string name,string path, bool ok);
 };
-//Output Steps And Builder
-// class OutputSteps {
-    
-//     // public:
-//     //     void printData() override;
-//         // void setToFile() override;
-// };
-// class OutputStepsBuilder : public FlowBuilder
-// {
-//     private:
-//     OutputSteps* output;
-//     public :
-//     ~OutputStepsBuilder();
-//     OutputSteps* getData();
-//     OutputStepsBuilder();
-//     void generateTextFileStep();
-//     void provideDataStep();
-//     void generatingTimeStamp();
-//     // void addInsights();
-//     // void refreshInsights();
 
-// };
 
 #endif

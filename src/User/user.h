@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include "../Flow/flow.h"
+#include "../Run/run.h"
 using namespace std;
 
 class User {
@@ -18,7 +19,7 @@ class User {
     void startFlows();
     // void buildFlow();
     void createNewFlow();
-    void accessExistingFlows(std::string username, std::string flowname );
+    void accessExistingFlows();
     void deleteFlows();
     string getCurrentTimestamp();
 

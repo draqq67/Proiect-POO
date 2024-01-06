@@ -31,15 +31,6 @@ DisplayStepsBuilder::DisplayStepsBuilder()
 {
     this->display = new DisplaySteps();
 }
-// OutputStepsBuilder::~OutputStepsBuilder()
-// {
-//     delete output;
-// }
-// OutputStepsBuilder::OutputStepsBuilder()
-// {
-//     this->output = new OutputSteps();
-// }
-
 // initializarea metodei de getData pentru fiecare obiectbuilder
 
 TextRelatedSteps* TextRelatedStepsBuilder::getData()
@@ -60,12 +51,6 @@ DisplaySteps* DisplayStepsBuilder::getData()
     this->display = new DisplaySteps();
     return result;
 }
-// OutputSteps* OutputStepsBuilder::getData()
-// {
-//     OutputSteps* result = this->output;
-//     this->output = new OutputSteps();
-//     return result;
-// }
 
 // initializarea metodelor clasei TextRelatedSteps and Builder
 
@@ -139,10 +124,10 @@ float NumberRelatedStepsBuilder::operations(float a, float b,string operation)
     return a+b;
     else if( operation == "-")
     return a-b;
-    else if( operation == "/")
-    return a*b;
     else if( operation == "*")
     return a*b;
+    else if( operation == "/")
+    return a/b;
 
 }
 
@@ -287,15 +272,16 @@ void TextRelatedSteps::setToFile(string file)
     {
         fstream out;
         out.open(file,ios::out|ios::app);
-         out<<"---Titles---";
+         out<<"---Titles---\n";
     for(int i = 0 ; i <title.size();i++)
         out<<title[i]<<" "<<subtitle[i]<<"\n";
-        out<<"\n---Text---\n";
+        out<<"---Text---\n";
     for(int i = 0 ; i <flow_title.size();i++)
         {
             out<<flow_title[i]<<"\n";
             out<<text[i]<<"\n";
         }
+        out<<"---Descriptions---\n";
     for(int i = 0 ;i < description.size();i++)
         {
             out<<description[i]<<":";
@@ -315,6 +301,7 @@ void DisplaySteps::setToFile(string file)
     }
     for(int i=0 ; i< txtFileName.size(); i++)
         out<<descriptionTxt[i]<<":"<<txtFileName[i]<<"\n";
+        out<<"\n---Csv files---\n";
     if(csvFileName.size() == 0)
     {
         out<<"No csv files\n";
@@ -323,11 +310,13 @@ void DisplaySteps::setToFile(string file)
     {
         out<<descriptionCsv[i]<<":"<<txtFileName[i]<<"\n";
     }
+        out<<"\n\n---End---";
         out.close();
     }
 void NumberRelatedSteps::setToFile(string file)
     {
          fstream out;
+         out.open(file,ios::out|ios::app);
          out<<"\n---NumberSteps---\n";
     for(int i = 0 ; i < descriptions.size();i++)
         out<<descriptions[i]<<": "<<numbers[i]<<"\n";

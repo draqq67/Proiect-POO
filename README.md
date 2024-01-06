@@ -1,13 +1,16 @@
 # Proiect POO
+
 An app that allows users to create custom flows for processes they use in their work.
 
 I propose in this project to made an app customed to the requirments propose
 
-Firstly, my project consists into 3 cpps : main.cpp, user.cpp, flow.cpp
+Firstly, my project consists into 3 cpps : 
+
+main.cpp, user.cpp, flow.cpp
 
 main.cpp -> I define the user and appeal the function user.greeting() to start the program 
 
-user.cpp : 
+user.cpp -> 
     
     -> Firstly i get into a scene where i authentif and log in. I ve done this part because i wanted to store for each user the flows he s writting. I store them in FlowSystemDataBase/username/flows. UserBD is a csv with just the usernames as i didnt want to get to complicated with it.
 
@@ -26,4 +29,17 @@ user.cpp :
                                         ->TextRelatedSteps, NumberRelatedSteps, DisplayRelatedSteps that all have the prinData and sentToFile.
             -> After i run all the flows. I get to 9th case where it is the output step where i appeal the method sendToFile from the products to create a flow file in the destined folder for each user  
     
-    -> Run The Flow : TBD 
+    -> Run The Flow :
+        -> in user.cpp i have a method called accesingExistingFlows :
+            -> When that method is picked, the user gets a list of his flows to pick from.
+            -> the running scene is made by Run class where i call the methods upon to run the flow requsted. As i do run the flows, i will get slightly different analytics as requested in requirments.
+            ->The analytics would be :
+                -> Started : count how many times the flow has been started
+                -> Completed : count how many times the flow has been completed (0 errors, 0 skips)
+                -> Skips : how many times a step has been skipped
+                -> Error : count how many steps has not been completed 
+                -> AverageErrors/flow: average value of errors made per flow
+            ->When the user complete an action, he would type done, or undone if he doesn't finish it.
+            -> the analytics are stored per session in a class called Insights that changes them regarding to the rules and uploads them back in flow_stastistics
+
+

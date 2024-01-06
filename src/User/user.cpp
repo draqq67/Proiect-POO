@@ -16,7 +16,7 @@ string User::getCurrentTimestamp()
     auto now = chrono::system_clock::now();
     time_t time = chrono::system_clock::to_time_t(now);
     char timestamp[64];
-    strftime(timestamp, sizeof(timestamp), "%Y%m%d_%H%M%S", localtime(&time));
+    strftime(timestamp, sizeof(timestamp), "%d/%m/%Y %H:%M:%S", localtime(&time));
     return string(timestamp);
 }
 void User::greeting()
@@ -39,8 +39,11 @@ void User::greeting()
             if(logged == 1)
             optiune = "0";
         }
-        else 
+        else if(optiune!="0")
         cout<<"Optiune invalida. Incearca din nou. Apasa 0 daca vrei sa iesi\n";
+        else{
+            cout<<"Goodbye";
+        }
     }
     if(logged == 1)
         User::startFlows();
@@ -51,8 +54,10 @@ void User::authentif()
     string username;
     bool ok = 1;
     while(ok != 0){
-    cout<<"\nType your name:\n";
+    cout<<"\nType your name. Press 0 if u want to go back:\n";
     cin>>username;
+    if(username == "0")
+    break;
     try{
         fstream userBd;
         userBd.open("userBd.csv",ios::in);
@@ -82,6 +87,16 @@ void User::authentif()
         relativePath="../FlowSystemDataBase/" + username +'/';
         filesystem::create_directory(relativePath+"CsvAndTextInputStep");
         filesystem::create_directory(relativePath+"Flows");
+        ofstream csvFile(relativePath + "flow_statistics.csv");
+        if (csvFile.is_open())
+        {
+        csvFile << "flowname, started, completed, screenskips, error, avgerrors\n";
+        csvFile.close();
+        }
+        else
+        {
+        throw "Unable to open CSV file for writing.\n";
+        }
     }
     
     catch(char const* msg)
@@ -98,8 +113,10 @@ void User::login( bool &logged)
     string username;
     while(ok != 0){
       try{ 
-        cout<<"\nType your username\n";
+        cout<<"\nType your username. If u want to go back press 0\n";
         cin>>username;
+        if(username=="0")
+            break;
         fstream userBd;
         userBd.open("userBd.csv",ios::in);
         string line,word;
@@ -139,20 +156,23 @@ void User::startFlows()
     string optiune ;
     while(optiune!="0")
     {
-        cout<<"\nApasa 1 daca vrei sa creezi un now flow, 2 daca vrei sa accesezi unul deja existent.\n";
+        cout<<"\nApasa 1 daca vrei sa creezi un now flow, 2 daca vrei sa accesezi unul deja existent,3 daca vrei sa stergi un flow.Apasa 0 daca vrei sa inchizi\n";
         
         cin>>optiune;
         if(optiune == "1")
         User::createNewFlow();
-        // else if(optiune == 2)
-        // {
-        //     string flow;
-        //     cout<<"\nCe flow vrei sa accesezi?\n";
-        //     cin>>flow;
-        //     User::accessExistingFlows(name,flow);
-        // }
-        else
+        else if(optiune == "2")
+        {
+            User::accessExistingFlows();
+        }
+        else if(optiune == "3")
+        {
+            User::deleteFlows();
+        }
+        else if(optiune!="0")
         cout<<"\nOptiune invalida. Try again\n";
+        else 
+        cout<<"Goodbye";
     }
 }
 void User::createNewFlow()
@@ -170,7 +190,8 @@ void User::createNewFlow()
     "6. Display Previous Steps \n",
     "7. Add a txt file\n",
     "8. Add a csv file\n",
-    "9. Create an Output for the flow\n"
+    "9. Create an Output for the flow\n",
+    "10. Show All Steps Again\n"
     };
     for( int i = 0 ; i < steps.size(); i++ )
          cout<<steps[i];
@@ -223,7 +244,7 @@ void User::createNewFlow()
                 getline(cin,description);
                 cout<<"Add text input :\n";
                 getline(cin,text_input);
-                textsteps->addTitle(title,subtitle);
+                textsteps->addTextInput(description,text_input);
                 break;
             }
             case 4:{
@@ -328,6 +349,7 @@ void User::createNewFlow()
                 cout<<"Provide a description for the flow\n";
                 getline(cin,file_description);
                 string file_path = "../FlowSystemDataBase/"+this->name+"/"+"Flows/";
+                string file_path_BD = "../FlowSystemDataBase/" + this->name +"/" +"flow_statistics.csv";
                 file_name += ".txt";
                 file_path += file_name;
                 ofstream output_file(file_path);
@@ -336,7 +358,7 @@ void User::createNewFlow()
                     // Write content to the file
                     output_file<< "Timestamp: "<< getCurrentTimestamp()<<"\n";
                     output_file << "File Title: " << file_title << "\n";
-                    output_file << "File Description: " << file_description << "\n";
+                    output_file << "File Description: " << file_description << "\n\n";
 
                     cout << "File created successfully at: " << file_path << "\n";
                     TextRelatedSteps* text = textsteps->getData();
@@ -345,29 +367,240 @@ void User::createNewFlow()
                     output_file.close();
                     text->setToFile(file_path);
                     number->setToFile(file_path);
-                    displayed->setToFile(file_path);
-                   
+                    displayed->setToFile(file_path);                   
                 }
                 else
                 {
                     cout << "Unable to open file for writing.\n";
                 }
+                fstream csvFile;
+                csvFile.open(file_path_BD,ios::out|ios::app);
+                if (csvFile.is_open())
+                {   
+                    csvFile<< file_name<<", 0, 0, 0, 0, 0";
+                    csvFile.close();
+                    cout<<"CSV file opened\n";
+                }
+                else
+                cout<<"CSV Statistics couldn't load";
+            break;
             }
+            case 10:
+                for(int i = 0 ; i < steps.size(); i++)
+                    cout<<steps[i];
+                break;
             default:
                 cout<<"Optiune Invalida. Incearca din nou";
                 break;
         }
     }
-    TextRelatedSteps* text = textsteps->getData();
-    NumberRelatedSteps* number = numbersteps->getData();
-    DisplaySteps * displayed = display->getData();
-    text->printData();
-    number->printData();
-    displayed->printData();
     delete textsteps;
     delete numbersteps;
     delete display;
 
 
 
+}
+void User::accessExistingFlows()
+{
+    cout<<"Pick Up a flow from your file :\n";
+    string dataPath = "../FlowSystemDataBase/" + name ;
+    string directoryPath="../FlowSystemDataBase/" + name + "/Flows/" ;
+    try
+    {
+        for (const auto& entry : filesystem::directory_iterator(directoryPath))
+        {
+            cout << entry.path().filename() << " ";
+        }
+        cout<<"\n What do u want to pick?\n";
+        string filename;
+        cin>>filename;
+        
+        Run * run = new Run();
+        run->setDataPath(dataPath);
+        run->setRunDataFlow(name,filename);
+
+        cout<<"---Run the steps---\n\n";
+        vector <string> steps;
+        steps ={"0. Show the flow\n",
+        "1.Title step\n",
+        "2.Title text step\n",
+        "3.Text input step\n",
+        "4.Number input step\n",
+        "5.Calculus step\n",
+        "6.TxtFiles step\n",
+        "7.CsvFiles step\n"
+        "8.End step"};
+
+        cout<<"All Steps would be in a linear way. Starting from 0 to 8\n";
+        string rules ="The rules of the step are simple when you have done a step.\n You type done else you type not done\n.To skip a step press skip\n";
+        cout<<"Press Start to start the flow: \n";
+        cout<<rules;
+        string start;
+        int optiune = 0;
+        getline(cin,start);
+        string step_outcome;
+        if(start == "start")
+        {
+         while(optiune != 8)
+         {
+            switch (optiune)
+            {
+            case 0:{
+                cout<<steps[0];
+                run->showFlow();
+                cout<<rules;
+                cin>>step_outcome;
+                optiune +=1;
+                run->uploadInsights(step_outcome);
+                break;
+            }
+            case 1:{
+                cout<<steps[1];
+                run->steps("---Titles---","---Text---");
+                cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            case 2:{
+                cout<<steps[2];
+                run->steps("---Text---","---Descriptions---");
+                 cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            case 3:{
+                cout<<steps[3];
+                run->steps("---Descriptions---","---NumberSteps---");
+                 cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            case 4:{
+                cout<<steps[4];
+                run->steps("---NumberSteps---","---CalculusSteps---");
+                 cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            case 5:{
+                cout<<steps[5];
+                run->steps("---CalculusSteps---","---Txt Files---");
+                 cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            case 6:{
+                cout<<steps[6];
+                run->steps("---Txt Files---","---Csv files---");
+                 cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            case 7:{
+                cout<<steps[7];
+                run->steps("---Csv files---","---End---");
+                 cout<<rules;
+                cin>>step_outcome;
+                run->uploadInsights(step_outcome);
+                optiune +=1;
+                break;
+            }
+            default:
+            cout<<steps[8];
+            step_outcome = "final";
+            run->uploadInsights(step_outcome);
+            Insights* insights = run->getInsights();
+            insights->printInsights();
+            insights->uploadInsightsToStatistics(filename,dataPath);
+                break;
+            }  
+         }
+        }
+        else cout<<"Try Again";
+
+        delete run;
+        
+    }
+    catch (const exception& e)
+    {
+        cerr << "Error: " << e.what() << endl;
+    }
+}
+void User::deleteFlows()
+{
+     try
+    {
+        string filename;
+        cout<<"Tell which file you want to delete:\n";
+        getline(cin,filename);
+         string directoryPath="../FlowSystemDataBase/" + name + "/Flows/" ;
+         int ok = 0;
+         for (const auto& entry : filesystem::directory_iterator(directoryPath))
+        {
+            if(entry.path().filename() == filename)
+            {
+                 filesystem::remove(directoryPath + filename);
+                cout << "File '" << filename << "' deleted successfully.\n";
+                ok = 1;
+                
+                string csvFilePath = "../FlowsSystemDataBase/" + name + "/flow_statistics.csv";
+                vector<string> csvContent;
+                ifstream csvFile(csvFilePath);
+                if (csvFile.is_open())
+                {
+                    string line;
+                    while (getline(csvFile, line))
+                    {
+                        // Exclude the row corresponding to the file being deleted
+                        if (line.find(filename) == string::npos)
+                        {
+                            csvContent.push_back(line);
+                        }
+                    }
+                    csvFile.close();
+
+                    ofstream updatedCsvFile(csvFilePath);
+                    if (updatedCsvFile.is_open())
+                    {
+                        for (const string& row : csvContent)
+                        {
+                            updatedCsvFile << row << "\n";
+                        }
+                        updatedCsvFile.close();
+                        cout << "Row corresponding to file '" << filename << "' deleted from '" << csvFilePath << "'.\n";
+                    }
+                    else
+                    {
+                        throw "Unable to open CSV file for writing.\n";
+                    }
+                }
+                else
+                {
+                    throw "Unable to open CSV file for reading.\n";
+                }
+
+                } 
+                if(ok == 0)
+                    throw "File not found";
+            }
+        }catch (const exception& e)
+        {
+            cerr << "Error: " << e.what() << endl;
+        }catch(const char * msg)
+        {
+            cout<<msg;
+        }
 }

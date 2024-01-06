@@ -1,0 +1,26 @@
+Timestamp: 05/01/2024 08:16:02
+File Title: test1
+File Description: description test
+
+---Titles---
+title : subtitle
+---Text---
+title : text
+---Descriptions---
+description : text input
+
+---NumberSteps---
+number: 4
+number: 5
+number: 6
+
+---CalculusSteps---
+step 0 + step 1 + step 2:24
+step 1 * step 2 / step 1:36
+
+---Txt files---
+test1.txt:/home/dragos/Desktop/Proiect-POO/FlowSystemDataBase/dragos/CsvAndTextInputStep/test1.txt
+---Csv files---
+No csv files
+
+---End---
