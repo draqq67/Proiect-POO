@@ -15,6 +15,7 @@ class Insights{
     int screenskips;
     int error;
     float avgerrors;
+
     void setInsights(string csvFile, string flow_statistics);
     void printInsights();
     void uploadInsightsToStatistics(string flow,string dataPath);

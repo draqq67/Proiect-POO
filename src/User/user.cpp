@@ -158,7 +158,7 @@ void User::startFlows()
     {
         cout<<"\nApasa 1 daca vrei sa creezi un now flow, 2 daca vrei sa accesezi unul deja existent,3 daca vrei sa stergi un flow.Apasa 0 daca vrei sa inchizi\n";
         
-        cin>>optiune;
+        getline(cin,optiune);
         if(optiune == "1")
         User::createNewFlow();
         else if(optiune == "2")
@@ -403,6 +403,7 @@ void User::createNewFlow()
 }
 void User::accessExistingFlows()
 {
+    Run * run = new Run();
     cout<<"Pick Up a flow from your file :\n";
     string dataPath = "../FlowSystemDataBase/" + name ;
     string directoryPath="../FlowSystemDataBase/" + name + "/Flows/" ;
@@ -414,9 +415,8 @@ void User::accessExistingFlows()
         }
         cout<<"\n What do u want to pick?\n";
         string filename;
-        cin>>filename;
-        
-        Run * run = new Run();
+        getline(cin,filename);
+
         run->setDataPath(dataPath);
         run->setRunDataFlow(name,filename);
 
@@ -429,20 +429,21 @@ void User::accessExistingFlows()
         "4.Number input step\n",
         "5.Calculus step\n",
         "6.TxtFiles step\n",
-        "7.CsvFiles step\n"
-        "8.End step"};
+        "7.CsvFiles step\n",
+        "8.End step\n"};
 
-        cout<<"All Steps would be in a linear way. Starting from 0 to 8\n";
-        string rules ="The rules of the step are simple when you have done a step.\n You type done else you type not done\n.To skip a step press skip\n";
-        cout<<"Press Start to start the flow: \n";
+        cout<<"All Steps would be in a linear way. Starting from 0 to 8\n\n";
+        string rules ="The rules of the step are simple when you have done a step.\nYou type done else you type not done.\nTo skip a step press skip\n";
         cout<<rules;
+        cout<<"\nPress start to start the flow: \n";
         string start;
         int optiune = 0;
-        getline(cin,start);
+
         string step_outcome;
+        getline(cin,start);
         if(start == "start")
         {
-         while(optiune != 8)
+         while(optiune != 9)
          {
             switch (optiune)
             {
@@ -450,7 +451,7 @@ void User::accessExistingFlows()
                 cout<<steps[0];
                 run->showFlow();
                 cout<<rules;
-                cin>>step_outcome;
+                getline(cin,step_outcome);
                 optiune +=1;
                 run->uploadInsights(step_outcome);
                 break;
@@ -459,7 +460,7 @@ void User::accessExistingFlows()
                 cout<<steps[1];
                 run->steps("---Titles---","---Text---");
                 cout<<rules;
-                cin>>step_outcome;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
@@ -467,8 +468,8 @@ void User::accessExistingFlows()
             case 2:{
                 cout<<steps[2];
                 run->steps("---Text---","---Descriptions---");
-                 cout<<rules;
-                cin>>step_outcome;
+                cout<<rules;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
@@ -476,8 +477,8 @@ void User::accessExistingFlows()
             case 3:{
                 cout<<steps[3];
                 run->steps("---Descriptions---","---NumberSteps---");
-                 cout<<rules;
-                cin>>step_outcome;
+                cout<<rules;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
@@ -485,26 +486,26 @@ void User::accessExistingFlows()
             case 4:{
                 cout<<steps[4];
                 run->steps("---NumberSteps---","---CalculusSteps---");
-                 cout<<rules;
-                cin>>step_outcome;
+                cout<<rules;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
             }
             case 5:{
                 cout<<steps[5];
-                run->steps("---CalculusSteps---","---Txt Files---");
-                 cout<<rules;
-                cin>>step_outcome;
+                run->steps("---CalculusSteps---","---Txt files---");
+                cout<<rules;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
             }
             case 6:{
                 cout<<steps[6];
-                run->steps("---Txt Files---","---Csv files---");
-                 cout<<rules;
-                cin>>step_outcome;
+                run->steps("---Txt files---","---Csv files---");
+                cout<<rules;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
@@ -512,21 +513,25 @@ void User::accessExistingFlows()
             case 7:{
                 cout<<steps[7];
                 run->steps("---Csv files---","---End---");
-                 cout<<rules;
-                cin>>step_outcome;
+                cout<<rules;
+                getline(cin,step_outcome);
                 run->uploadInsights(step_outcome);
                 optiune +=1;
                 break;
             }
-            default:
+            case 8:{
             cout<<steps[8];
             step_outcome = "final";
             run->uploadInsights(step_outcome);
             Insights* insights = run->getInsights();
             insights->printInsights();
             insights->uploadInsightsToStatistics(filename,dataPath);
+            optiune+=1;    
                 break;
             }  
+            default :
+                break;
+            }
          }
         }
         else cout<<"Try Again";

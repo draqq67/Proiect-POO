@@ -1,2 +1,2 @@
 flowname, started, completed, screenskips, error, avgerrors
-test.txt,0,0,0,0,0
+test.txt,2,1,2,1,0.5

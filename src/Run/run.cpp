@@ -8,13 +8,13 @@ using namespace std;
 
 void Run::setDataPath(string dataPath)
 {
-    this->dataPath = dataPath;
+    this->dataPath = dataPath+"/Flows";
     this->flow_statistics = dataPath+"/flow_statistics.csv";
 }
 void Run::setRunDataFlow(string username, string flow)
 {
     this->username = username;
-    this->flow = this->dataPath + flow;
+    this->flow = this->dataPath + "/"+ flow;
     insights->setInsights(flow,this->flow_statistics);
 }
 void Insights::setInsights(string csvFile, string flow_statistics)
@@ -27,7 +27,6 @@ void Insights::setInsights(string csvFile, string flow_statistics)
     if (!statsInput.is_open()) {
         throw "Error: Unable to open flow statistics file\n";
     }
-    cout<<"Deschis";
     string line;
     getline(statsInput, line);  // Skip header line
     bool ok = 0;
