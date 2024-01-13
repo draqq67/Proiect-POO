@@ -36,19 +36,19 @@ DisplayStepsBuilder::DisplayStepsBuilder()
 TextRelatedSteps* TextRelatedStepsBuilder::getData()
 {
     TextRelatedSteps* result = this->text;
-    this->text = new TextRelatedSteps();
+    // this->text = new TextRelatedSteps();
     return result;
 }
 NumberRelatedSteps* NumberRelatedStepsBuilder::getData()
 {
     NumberRelatedSteps* result = this->number;
-    this->number = new NumberRelatedSteps();
+    // this->number = new NumberRelatedSteps();
     return result;
 }
 DisplaySteps* DisplayStepsBuilder::getData()
 {
     DisplaySteps* result = this->display;
-    this->display = new DisplaySteps();
+    // this->display = new DisplaySteps(); 
     return result;
 }
 
@@ -97,21 +97,67 @@ void NumberRelatedStepsBuilder::numberInputStep(string description, float number
     this->number->numbers.push_back(number);
 }
 
-void NumberRelatedStepsBuilder::calculusStep(std::vector<int> steps_index, std::vector<string> operators, string calculusdescription)
+void NumberRelatedStepsBuilder::calculusStep(std::vector<int> steps_index, std::vector<string> operators, std::string descriptions, std::vector<string> min_max, std::vector<string> just_operators )
 {
-    this->number->calculus_description.push_back(calculusdescription);
-    float rasp = 0;
-    vector<float> numbers = this->number->numbers;
     try{
+
+    vector<float> numbers = this->number->numbers;
+    float rasp = 0;
+    if(min_max.size()== 0)
+    {
+    if(*max_element(steps_index.begin(),steps_index.end()) > numbers.size())
+            throw "Number Steps doesnt exist";
+    this->number->calculus_description.push_back(descriptions);
+    rasp = operations(float(numbers[steps_index[0]]),float(numbers[steps_index[1]]),just_operators[0]);
+      for ( int i = 1; i < operators.size(); i++ )
+    {
+        rasp = operations(rasp,float(numbers[steps_index[i+1]]),just_operators[i]);
+    }
+    this->number->calculus.push_back(rasp);
+    }
+    else if(min_max.size()!=0)
+    {
         if(*max_element(steps_index.begin(),steps_index.end()) > numbers.size())
             throw "Number Steps doesnt exist";
-    rasp = operations(numbers[steps_index[0]],numbers[steps_index[1]],operators[0]);
-    
-      for ( int i = 1; i < operators.size(); i++ )
-        rasp += operations(rasp,numbers[steps_index[i+1]],operators[i]);
-    
-    this->number->calculus.push_back(rasp);
-    rasp = 0;
+        this->number->calculus_description.push_back(descriptions);
+        if(min_max[0] == "min(" || min_max[0]=="max(")
+        {
+            float rasp = 0;
+            int i = 0;
+            while(operators[i] != ",")
+            {
+                if(operators[i] == "min(" || operators[i] == "max(")
+                rasp = numbers[steps_index[i]];
+                else
+                rasp = operations(rasp,float(numbers[steps_index[i]]),operators[i]);
+                i++;
+            }
+            float rasp1 = 0;
+            while(operators[i] != ")")
+            {
+                if(operators[i] != ",")
+                rasp1 = operations(rasp1,float(numbers[steps_index[i]]),operators[i]);
+                else
+                rasp1 = numbers[steps_index[i]];
+                i++;
+            }
+            if(min_max[0] == "min(")
+            {
+                if(rasp < rasp1)
+                this->number->calculus.push_back(rasp);
+                else
+                this->number->calculus.push_back(rasp1);
+            }
+            else if(min_max[0] == "max(")
+            {
+                if(rasp > rasp1)
+                this->number->calculus.push_back(rasp);
+                else
+                this->number->calculus.push_back(rasp1);
+            }
+        }
+
+    }
     }catch(const char* msg)
     {
         cout<<msg;
@@ -201,7 +247,7 @@ void DisplayStepsBuilder::csvAndTxtStep(string description,string name,string pa
         file.open(path, ios::in | ios::binary);
         if (!file.is_open())
         {
-            throw "\nUnable to open file: " + path + "\n";
+            throw "\nUnable to open file. Try Again or skip the step \n";
         }
         // Read the content of the file into a string
         size_t last_slash = path.find_last_of("/\\");
@@ -292,7 +338,7 @@ void TextRelatedSteps::setToFile(string file)
     }
 void DisplaySteps::setToFile(string file)
     {
-         fstream out;
+        fstream out;
         out.open(file,ios::out|ios::app);
         out<<"\n---Txt files---\n";
     if(txtFileName.size() == 0)
@@ -308,7 +354,7 @@ void DisplaySteps::setToFile(string file)
     }
     for ( int i = 0 ; i< csvFileName.size();i++)
     {
-        out<<descriptionCsv[i]<<":"<<txtFileName[i]<<"\n";
+        out<<descriptionCsv[i]<<":"<<csvFileName[i]<<"\n";
     }
         out<<"\n\n---End---";
         out.close();
@@ -323,6 +369,6 @@ void NumberRelatedSteps::setToFile(string file)
         out<<"\n---CalculusSteps---\n";
     for(int i = 0 ; i < calculus.size(); i++)
         out<<calculus_description[i]<<":"<<calculus[i]<<"\n";
-        out.open(file,ios::out|ios::app);
+        out.close();
     }
 

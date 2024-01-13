@@ -11,25 +11,23 @@ void Run::setDataPath(string dataPath)
     this->dataPath = dataPath+"/Flows";
     this->flow_statistics = dataPath+"/flow_statistics.csv";
 }
-void Run::setRunDataFlow(string username, string flow)
+void Run::setRunDataFlow(string username, string flow, bool &ok)
 {
     this->username = username;
     this->flow = this->dataPath + "/"+ flow;
-    insights->setInsights(flow,this->flow_statistics);
+    insights->setInsights(flow,this->flow_statistics,ok);
 }
-void Insights::setInsights(string csvFile, string flow_statistics)
+void Insights::setInsights(string csvFile, string flow_statistics, bool &ok)
 {
     fstream statsInput;
      try
      {
          statsInput.open(flow_statistics, ios::in);
-         cout<<flow_statistics;
     if (!statsInput.is_open()) {
         throw "Error: Unable to open flow statistics file\n";
     }
     string line;
     getline(statsInput, line);  // Skip header line
-    bool ok = 0;
     // Read data from the flow_statistics file and update insights
     while (getline(statsInput, line)) {
         stringstream ss(line);
@@ -49,12 +47,12 @@ void Insights::setInsights(string csvFile, string flow_statistics)
             this->screenskips = stoi(screenskipsStr);
             this->error = stoi(errorStr);
             this->avgerrors = stof(avgerrorsStr);
-            break; 
             ok = 1;
+            break; 
         }
     }
     if(ok == 0)
-       cout<<" File not found\n";
+       cout<<" \nFile not found\n";
          statsInput.close();
     }catch(const char * msg)
     {

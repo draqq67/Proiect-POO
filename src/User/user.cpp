@@ -26,8 +26,7 @@ void User::greeting()
     while(optiune != "0")
     {
         cout<<"\nHello\nselect 1 for authentification or 2 for login\n";
-        cin>>optiune;
-        
+        getline(cin,optiune);        
         if(optiune == "1")
         {
             User::authentif();
@@ -42,7 +41,7 @@ void User::greeting()
         else if(optiune!="0")
         cout<<"Optiune invalida. Incearca din nou. Apasa 0 daca vrei sa iesi\n";
         else{
-            cout<<"Goodbye";
+            cout<<"\nGoodbye\n";
         }
     }
     if(logged == 1)
@@ -55,7 +54,7 @@ void User::authentif()
     bool ok = 1;
     while(ok != 0){
     cout<<"\nType your name. Press 0 if u want to go back:\n";
-    cin>>username;
+    getline(cin,username);
     if(username == "0")
     break;
     try{
@@ -114,7 +113,7 @@ void User::login( bool &logged)
     while(ok != 0){
       try{ 
         cout<<"\nType your username. If u want to go back press 0\n";
-        cin>>username;
+        getline(cin,username);
         if(username=="0")
             break;
         fstream userBd;
@@ -172,7 +171,7 @@ void User::startFlows()
         else if(optiune!="0")
         cout<<"\nOptiune invalida. Try again\n";
         else 
-        cout<<"Goodbye";
+        cout<<"\nGoodbye\n";
     }
 }
 void User::createNewFlow()
@@ -202,8 +201,8 @@ void User::createNewFlow()
     while(optiune != "0")
     {    
         cout<<"\nPentru a alege un pas, apasa indexul acestuia. Pentru a termina flowul apasa 0\n";
-        cin>>optiune;
-        cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+        getline(cin,optiune);
+        // cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
         string title;
         string subtitle;
         string text;
@@ -252,7 +251,7 @@ void User::createNewFlow()
                 cout<<"Add a description of the expected number input:\n";
                 getline(cin,description);
                 cout<<"Add a number input : ";
-                cin>>number_input;
+                getline(cin,number_input);
                 if(regex_match(number_input,floatRegex)){
                 number = stof(number_input);
                 numbersteps->numberInputStep(description,number);
@@ -266,17 +265,19 @@ void User::createNewFlow()
                 cout<<steps[5];
                 string calculusdescription;
                 vector <string> operators;
+                vector <string> min_max;
+                vector <string> parantheses;
                 vector <int> steps_index;
                 regex naturalNumberRegex("^[0-9]+$");
                 string word;
                 cout<<"Tell which number steps to calculate with the following format.";
-                cout<<"Valid format : step 3 + step 5 / step 7 * step 1....\n";
+                cout<<"Valid format : step 3 + step 5 / step 7 * step 1....\n or max( step 3 , step 5 + step 0)\n or min( step 3 , step 5 + step 0)\n";
                 getline(cin,calculusdescription);
                 
                 stringstream s(calculusdescription);
                 operators.clear();
                 steps_index.clear();
-                
+                vector <string> just_operators;
                 try{
                     
                     while(getline(s,word,' '))
@@ -289,14 +290,39 @@ void User::createNewFlow()
                         else if(word == "/" || word == "*" || word == "+" || word == "-")
                         {
                             operators.push_back(word);
+                            just_operators.push_back(word);
+                        }
+                        else if(word == "min(" || word=="max(")
+                        {
+                            min_max.push_back(word);
+                            operators.push_back(word);
+                        }
+                        else if(word == ")")
+                        {
+                            parantheses.push_back(word);
+                            operators.push_back(word);
+                        }
+                        else if(word==",")
+                        {
+                            operators.push_back(word);
                         }
                         else if(word != "step")
-                            throw "\ninvalid format please Type Again";                    
+                            throw "\ninvalid format please Type Againa";                    
                     }
-                    if(operators.size()+1 != steps_index.size())
-                        throw "\ninvalid format please Type Again";
-                    
-                    numbersteps->calculusStep(steps_index,operators, calculusdescription);
+                    if( min_max.size() != parantheses.size() )
+                        throw "\ninvalid format please Type Againb";
+                    else if( min_max.size() == parantheses.size() && min_max.size() == 0 && just_operators.size() != steps_index.size()-1)
+                    {
+                            throw "\ninvalid format please Type Againc";
+                    }
+                    else if (min_max.size() == parantheses.size() && min_max.size() != 0)
+                    {
+                        if(operators.size()-1 != steps_index.size())
+                            throw "\ninvalid format please Type Againd";
+                    }
+                    else if(min_max.size() > 1)
+                     throw "\ninvalid format please Type Againf";
+                    numbersteps->calculusStep(steps_index,operators,calculusdescription,min_max,just_operators);
                 }catch(const char* msg){
                     cout<<msg;
                 }
@@ -307,7 +333,7 @@ void User::createNewFlow()
                 cout<<steps[6];
                 string index;
                 cout<<"Type the index of the step you want to display.\n If u want to display text related steps press text.\n If u want to display number related steps, type number :\n";
-                cin>>index;
+                getline(cin,index);
                 display->chooseAndDisplayStep(index,textsteps,numbersteps);
                 break;
             }
@@ -316,9 +342,9 @@ void User::createNewFlow()
                 cout<<"Tell the description of the txt file you want to add : \n";
                 string description;
                 string path;
-                string initial_path = "/home/dragos/Desktop/Proiect-POO/FlowTests/Text/";
+                string initial_path = "/home/dragos/Desktop/Proiect-POO/";
                 getline(cin,description);
-                cout<<"Now tell the name with the path of the file: ";
+                cout<<"Now tell the name with the path of the file, initial path is ../Proiect-Poo/: ";
                 getline(cin,path);
                 path = initial_path + path;
                 display->csvAndTxtStep(description,this->name,path,0);
@@ -329,9 +355,9 @@ void User::createNewFlow()
                 cout<<"Tell the description of the csv file you want to add : \n";
                 string description;
                 string path;
-                string initial_path="/home/dragos/Desktop/Proiect-POO/FlowTests/Csv/";
+                string initial_path="/home/dragos/Desktop/Proiect-POO/";
                 getline(cin,description);
-                cout<<"Now tell the name with the path of the file: ";
+                cout<<"Now tell the name with the path of the file, initial path is ../Proiect-Poo/: ";
                 getline(cin,path);
                 path = initial_path+path;
                 display->csvAndTxtStep(description,this->name,path,1);
@@ -350,9 +376,23 @@ void User::createNewFlow()
                 getline(cin,file_description);
                 string file_path = "../FlowSystemDataBase/"+this->name+"/"+"Flows/";
                 string file_path_BD = "../FlowSystemDataBase/" + this->name +"/" +"flow_statistics.csv";
+                int i = 0;
+                for (const auto& entry : filesystem::directory_iterator(file_path))
+                {
+                    string filename = entry.path().filename().string();
+                    size_t pos = filename.find('(');
+                    if (pos != std::string::npos) {
+                        filename = filename.substr(0, pos);
+                    }
+                    if (filename == file_name)
+                        i++;
+                }
+                if(i != 0)
+                file_name += "(" + to_string(i-1) + ").txt";
                 file_name += ".txt";
                 file_path += file_name;
-                ofstream output_file(file_path);
+                string new_file_path = file_path;
+                ofstream output_file(new_file_path);
                 if (output_file.is_open())
                 {
                     // Write content to the file
@@ -418,8 +458,10 @@ void User::accessExistingFlows()
         getline(cin,filename);
 
         run->setDataPath(dataPath);
-        run->setRunDataFlow(name,filename);
-
+        bool ok = 0;
+        run->setRunDataFlow(name,filename,ok);
+        if(ok == 0)
+            throw "File not found";
         cout<<"---Run the steps---\n\n";
         vector <string> steps;
         steps ={"0. Show the flow\n",
@@ -433,7 +475,7 @@ void User::accessExistingFlows()
         "8.End step\n"};
 
         cout<<"All Steps would be in a linear way. Starting from 0 to 8\n\n";
-        string rules ="The rules of the step are simple when you have done a step.\nYou type done else you type not done.\nTo skip a step press skip\n";
+        string rules ="\nThe rules of the step are simple when you have done a step.\nYou type done else you type not done.\nTo skip a step press skip\n";
         cout<<rules;
         cout<<"\nPress start to start the flow: \n";
         string start;
@@ -539,20 +581,27 @@ void User::accessExistingFlows()
         delete run;
         
     }
-    catch (const exception& e)
+    catch (const char* msg)
     {
-        cerr << "Error: " << e.what() << endl;
+        cout<<msg;
     }
 }
 void User::deleteFlows()
 {
      try
     {
+        string directoryPath="../FlowSystemDataBase/" + name + "/Flows/" ;
         string filename;
+        for (const auto& entry : filesystem::directory_iterator(directoryPath))
+        {
+            cout << entry.path().filename() << " ";
+        }
+        cout<<"\n What do u want to pick?\n";
         cout<<"Tell which file you want to delete:\n";
         getline(cin,filename);
-         string directoryPath="../FlowSystemDataBase/" + name + "/Flows/" ;
          int ok = 0;
+         if(std::filesystem::directory_iterator(directoryPath) == std::filesystem::directory_iterator{})
+            throw "Directory is empty.\n";
          for (const auto& entry : filesystem::directory_iterator(directoryPath))
         {
             if(entry.path().filename() == filename)
@@ -561,7 +610,7 @@ void User::deleteFlows()
                 cout << "File '" << filename << "' deleted successfully.\n";
                 ok = 1;
                 
-                string csvFilePath = "../FlowsSystemDataBase/" + name + "/flow_statistics.csv";
+                string csvFilePath = "../FlowSystemDataBase/" + name + "/flow_statistics.csv";
                 vector<string> csvContent;
                 ifstream csvFile(csvFilePath);
                 if (csvFile.is_open())
@@ -598,9 +647,10 @@ void User::deleteFlows()
                 }
 
                 } 
-                if(ok == 0)
-                    throw "File not found";
+                
             }
+            if(ok == 0)
+                throw "File not found\n";
         }catch (const exception& e)
         {
             cerr << "Error: " << e.what() << endl;

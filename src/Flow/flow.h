@@ -69,7 +69,7 @@ class NumberRelatedStepsBuilder : public FlowBuilder{
     NumberRelatedSteps* getData();
     NumberRelatedStepsBuilder();
     void numberInputStep(std::string description, float number );
-    void calculusStep(std::vector<int> steps_index, std::vector<string> operators, std::string calculusdescription );
+    void calculusStep(std::vector<int> steps_index, std::vector<string> operators,std::string descriptions, std::vector<string> min_max,std::vector<string> just_operators);
     // void showCalculusStep();
     float operations(float a, float b, string operation);
 
