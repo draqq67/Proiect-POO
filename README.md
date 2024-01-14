@@ -4,6 +4,15 @@ An app that allows users to create custom flows for processes they use in their 
 
 I propose in this project to made an app customed to the requirments propose
 
+To see the test projects & demo video more easily, I uploaded to google drive : https://drive.google.com/drive/folders/1ME_9GGJHsBa6e_uEpkz9ji0xV7-o1hKF?usp=sharing
+
+To run the app :
+   ```
+   cd src
+   make
+   ./app
+   ```
+
 ## Firstly, my project consists into 3 cpps : 
 
 main.cpp, user.cpp, flow.cpp
@@ -39,8 +48,9 @@ main.cpp -> I define the user and appeal the function user.greeting() to start t
       - When the user complete an action, he would type done, or undone if he doesn't finish it.
       - the analytics are stored per session in a class called Insights that changes them regarding to the rules and uploads them back in flow_stastistics
 ### Delete :
+   - Get the flows from their directory then delete from both the directory and csv_statistics
 
 ### Bugs :
    - calculus step : min/max can't take more than 2 arguments without failing, and also can take only up to one min/max per step
-   - calculus step do to the nature of the if clauses it can take also arguments like step 0 step 1 step 2 / and still compute
+   - calculus step do to the nature of the if clauses it can take also arguments like:  step 0 step 1 step 2 / + and still can compute
    - not much of an issue but for csv&text input step the path starts as Proiect-Poo/ and don t have time to test if u take an argument like ../../path/to/smth/smth.txt if it can be read
