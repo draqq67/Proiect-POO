@@ -218,6 +218,7 @@ void User::createNewFlow()
         switch (optiune_int)
         {
             case 0:
+                cout<<steps[0];
                 break;
             case 1:{
                 cout<<steps[1];
