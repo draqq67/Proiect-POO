@@ -256,7 +256,7 @@ void DisplayStepsBuilder::csvAndTxtStep(string description,string name,string pa
         string file_content((istreambuf_iterator<char>(file)), istreambuf_iterator<char>());
 
         // Create a new file in the user's directory and save the content
-        string user_directory = "/home/dragos/Desktop/Proiect-POO/FlowSystemDataBase/" + name + "/" +"CsvAndTextInputStep" + "/";
+        string user_directory = "../FlowSystemDataBase/" + name + "/CsvAndTextInputStep/";
         string new_file_path = user_directory + original_filename ;
         ofstream new_file(new_file_path, ios::out | ios::binary);
         new_file << file_content;

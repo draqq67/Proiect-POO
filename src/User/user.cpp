@@ -342,9 +342,9 @@ void User::createNewFlow()
                 cout<<"Tell the description of the txt file you want to add : \n";
                 string description;
                 string path;
-                string initial_path = "/home/dragos/Desktop/Proiect-POO/";
+                string initial_path = "../";
                 getline(cin,description);
-                cout<<"Now tell the name with the path of the file, initial path is ../Proiect-Poo/: ";
+                cout<<"Now tell the name with the path of the file, initial path is /Proiect-Poo/: ";
                 getline(cin,path);
                 path = initial_path + path;
                 display->csvAndTxtStep(description,this->name,path,0);
@@ -355,9 +355,9 @@ void User::createNewFlow()
                 cout<<"Tell the description of the csv file you want to add : \n";
                 string description;
                 string path;
-                string initial_path="/home/dragos/Desktop/Proiect-POO/";
+                string initial_path="../";
                 getline(cin,description);
-                cout<<"Now tell the name with the path of the file, initial path is ../Proiect-Poo/: ";
+                cout<<"Now tell the name with the path of the file, initial path is /Proiect-Poo: ";
                 getline(cin,path);
                 path = initial_path+path;
                 display->csvAndTxtStep(description,this->name,path,1);
@@ -417,6 +417,7 @@ void User::createNewFlow()
                 csvFile.open(file_path_BD,ios::out|ios::app);
                 if (csvFile.is_open())
                 {   
+                    csvFile<<"\n";
                     csvFile<< file_name<<", 0, 0, 0, 0, 0";
                     csvFile.close();
                     cout<<"CSV file opened\n";
