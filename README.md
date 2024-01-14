@@ -20,11 +20,11 @@ main.cpp -> I define the user and appeal the function user.greeting() to start t
 ### flow.cpp structure 
    - i ve done a creational template mainly based on Builder with some little modification
    - I create an abstract class FlowBuilder that is an interface for : 
-        - TextRelatedStepsBuilder for the texts related steps (Title,Text,Text Input)
-        - NumberRelatedStepsBuilder for number related steps (Number and Calculus)
-        - DisplayRelatedStepsBuilder for display related steps (chooseAndDisplay, csvandTextInputFilesStep)
-        - The products from the subclasses of the Builder are defined on the abstract class flowSteps that have, they get the data from the builder through getData method:
-        -TextRelatedSteps, NumberRelatedSteps, DisplayRelatedSteps that all have the prinData and sentToFile.
+      - TextRelatedStepsBuilder for the texts related steps (Title,Text,Text Input)
+      - NumberRelatedStepsBuilder for number related steps (Number and Calculus)
+      - DisplayRelatedStepsBuilder for display related steps (chooseAndDisplay, csvandTextInputFilesStep)
+      - The products from the subclasses of the Builder are defined on the abstract class flowSteps that have, they get the data from the builder through getData method:
+      -TextRelatedSteps, NumberRelatedSteps, DisplayRelatedSteps that all have the prinData and sentToFile.
    -After i run all the flows. I get to 9th case where it is the output step where i appeal the method sendToFile from the products to create a flow file in the destined folder for each user  
 ### Run The Flow :
    - in user.cpp i have a method called accesingExistingFlows :
