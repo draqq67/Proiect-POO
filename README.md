@@ -4,6 +4,15 @@ An app that allows users to create custom flows for processes they use in their 
 
 I propose in this project to made an app customed to the requirments propose
 
+To see the test projects & demo video more easily, I uploaded to google drive : https://drive.google.com/drive/folders/1ME_9GGJHsBa6e_uEpkz9ji0xV7-o1hKF?usp=sharing
+
+To run the app :
+   ```
+   cd src
+   make
+   ./app
+   ```
+
 ## Firstly, my project consists into 3 cpps : 
 
 main.cpp, user.cpp, flow.cpp
