@@ -631,12 +631,16 @@ void User::deleteFlows()
                     ofstream updatedCsvFile(csvFilePath);
                     if (updatedCsvFile.is_open())
                     {
-                        for (const string& row : csvContent)
+                        for (size_t i = 0; i < csvContent.size(); ++i)
                         {
-                            updatedCsvFile << row << "\n";
+                            updatedCsvFile << csvContent[i];
+                                if (i != csvContent.size() - 1)
+                                    {
+                                    updatedCsvFile << "\n";
+                                        }
                         }
-                        updatedCsvFile.close();
-                        cout << "Row corresponding to file '" << filename << "' deleted from '" << csvFilePath << "'.\n";
+    updatedCsvFile.close();
+    cout << "Row corresponding to file '" << filename << "' deleted from '" << csvFilePath << "'.\n";
                     }
                     else
                     {
