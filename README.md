@@ -28,16 +28,16 @@ main.cpp -> I define the user and appeal the function user.greeting() to start t
    -After i run all the flows. I get to 9th case where it is the output step where i appeal the method sendToFile from the products to create a flow file in the destined folder for each user  
 ### Run The Flow :
    - in user.cpp i have a method called accesingExistingFlows :
-            - When that method is picked, the user gets a list of his flows to pick from.
-            - the running scene is made by Run class where i call the methods upon to run the flow requsted. As i do run the flows, i will get slightly different analytics as requested in requirments.
-            - The analytics would be :
-                - Started : count how many times the flow has been started
-                - Completed : count how many times the flow has been completed (0 errors, 0 skips)
-                - Skips : how many times a step has been skipped
-                - Error : count how many steps has not been completed 
-                - AverageErrors/flow: average value of errors made per flow
-            - When the user complete an action, he would type done, or undone if he doesn't finish it.
-            - the analytics are stored per session in a class called Insights that changes them regarding to the rules and uploads them back in flow_stastistics
+     - When that method is picked, the user gets a list of his flows to pick from.
+     - the running scene is made by Run class where i call the methods upon to run the flow requsted. As i do run the flows, i will get slightly different analytics as requested in requirments.
+     - The analytics would be :
+         - Started : count how many times the flow has been started
+         - Completed : count how many times the flow has been completed (0 errors, 0 skips)
+         - Skips : how many times a step has been skipped
+         - Error : count how many steps has not been completed 
+         - AverageErrors/flow: average value of errors made per flow
+      - When the user complete an action, he would type done, or undone if he doesn't finish it.
+      - the analytics are stored per session in a class called Insights that changes them regarding to the rules and uploads them back in flow_stastistics
 ### Delete :
 
 ### Bugs :
