@@ -1,4 +1,4 @@
-# Proiect POO
+# Proiect POO Zarnescu Dragos 321 AC
 
 An app that allows users to create custom flows for processes they use in their work.
 
